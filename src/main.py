@@ -215,9 +215,11 @@ installed with:
 
         elif event.type == EventType.ON_CONVERSATION_TURN_STARTED:
             status_ui.status('listening')
+            action.pauseActors()
 
         elif event.type == EventType.ON_END_OF_UTTERANCE:
             status_ui.status('thinking')
+            action.resumeActors()
 
         elif event.type == EventType.ON_RECOGNIZING_SPEECH_FINISHED and \
                 event.args and actor.can_handle(event.args['text']):
