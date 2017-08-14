@@ -215,11 +215,9 @@ installed with:
 
         elif event.type == EventType.ON_CONVERSATION_TURN_STARTED:
             status_ui.status('listening')
-            action.pauseActors()
 
         elif event.type == EventType.ON_END_OF_UTTERANCE:
             status_ui.status('thinking')
-            action.resumeActors()
 
         elif event.type == EventType.ON_RECOGNIZING_SPEECH_FINISHED and \
                 event.args and actor.can_handle(event.args['text']):
@@ -354,6 +352,7 @@ class SyncMicRecognizer(object):
         self.recognizer.end_audio()
 
     def recognize(self):
+        action.pauseActors()
         if self.recognizer_event.is_set():
             # Duplicate trigger (eg multiple button presses)
             return
@@ -399,6 +398,9 @@ class SyncMicRecognizer(object):
             logger.warning('%r was not handled', result.transcript)
         else:
             logger.warning('no command recognized')
+
+        action.resumeActors()
+
 
     def _play_assistant_response(self, audio_bytes):
         bytes_per_sample = speech.AUDIO_SAMPLE_SIZE
